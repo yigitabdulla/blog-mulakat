@@ -1,0 +1,49 @@
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../store/slices/authSlice';
+import { Link, useNavigate } from 'react-router-dom';
+
+const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLoading, error, user } = useSelector(state => state.auth);
+  const [form, setForm] = useState({ email: '', password: '' });
+
+  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    const result = await dispatch(login(form));
+    if (result.meta.requestStatus === 'fulfilled') {
+      navigate('/');
+    }
+  };
+
+  return (
+    <div className="max-w-md mx-auto card">
+      <h1 className="text-2xl font-bold text-white mb-6">Login</h1>
+      {error && <div className="mb-4 text-red-400">{error}</div>}
+      <form onSubmit={onSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm text-gray-300 mb-1">Email</label>
+          <input name="email" type="email" className="input-field" value={form.email} onChange={onChange} required />
+        </div>
+        <div>
+          <label className="block text-sm text-gray-300 mb-1">Password</label>
+          <input name="password" type="password" className="input-field" value={form.password} onChange={onChange} required />
+        </div>
+        <button type="submit" className="btn-primary w-full" disabled={isLoading}>
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
+      </form>
+      <p className="text-gray-300 text-sm mt-4">
+        No account? <Link to="/register" className="text-primary-400">Register</Link>
+      </p>
+    </div>
+  );
+};
+
+export default Login;
+
+
+

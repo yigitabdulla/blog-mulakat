@@ -12,12 +12,14 @@ const { protect } = require('../middleware/auth');
 
 // Public routes
 router.get('/', getAllBlogs);
-router.get('/:id', getBlogById);
 
 // Protected routes
+router.get('/user/my-blogs', protect, getUserBlogs);
 router.post('/', protect, createBlog);
 router.put('/:id', protect, updateBlog);
 router.delete('/:id', protect, deleteBlog);
-router.get('/user/my-blogs', protect, getUserBlogs);
+
+// Public route by id (placed after specific route above)
+router.get('/:id', getBlogById);
 
 module.exports = router;
