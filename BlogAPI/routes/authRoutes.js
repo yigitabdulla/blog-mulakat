@@ -4,13 +4,15 @@ const {
     registerUser,
     loginUser,
     logoutUser,
-    getMe
+    getMe,
+    promoteToAdmin
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
 // Public routes
 router.post('/register', registerUser);
 router.post('/login', loginUser);
+router.post('/promote-admin', promoteToAdmin); // For initial admin setup
 
 // Protected routes
 router.post('/logout', protect, logoutUser);

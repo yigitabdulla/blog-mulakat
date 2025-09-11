@@ -1,7 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import BlogCard from '../components/BlogCard';
+import Achievement from '../components/Achievement';
 import { deleteBlogById, fetchMyBlogs } from '../store/slices/blogSlice';
+import { calculateAchievements, getLockedAchievements } from '../utils/achievements';
 import { useEffect } from 'react';
 
 const Profile = () => {
@@ -40,8 +42,12 @@ const Profile = () => {
   // User's posts
   const userPosts = authUser ? myPosts : posts.slice(0, 3);
   const totalVotes = userPosts.reduce((sum, post) => sum + (post.votes || 0), 0);
-  const totalWins = userPosts.reduce((sum, post) => sum + (post.wins || 0), 0);
-  const winRate = totalVotes > 0 ? Math.round((totalWins / totalVotes) * 100) : 0;
+  const totalWins = authUser ? (authUser.totalWins || 0) : userPosts.reduce((sum, post) => sum + (post.wins || 0), 0);
+
+  // Calculate achievements
+  const achievements = authUser ? calculateAchievements(authUser, userPosts, []) : [];
+  const lockedAchievements = authUser ? getLockedAchievements(authUser, userPosts, []) : [];
+  const allAchievements = [...achievements, ...lockedAchievements];
 
   const getStatusBadge = (post) => {
     if (post.inBattle) {
@@ -77,22 +83,18 @@ const Profile = () => {
             <p className="text-gray-300 mb-6 max-w-2xl">{headerUser.bio}</p>
             
             {/* User Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="text-center">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+              <div className="text-center bg-gray-800 rounded-lg p-2">
                 <div className="text-2xl font-bold gradient-text">{userPosts.length}</div>
                 <div className="text-sm text-gray-400">Posts</div>
               </div>
-              <div className="text-center">
+              <div className="text-center bg-gray-800 rounded-lg p-2">
                 <div className="text-2xl font-bold gradient-text">{totalVotes}</div>
                 <div className="text-sm text-gray-400">Total Votes</div>
               </div>
-              <div className="text-center">
+              <div className="text-center bg-gray-800 rounded-lg p-2">
                 <div className="text-2xl font-bold gradient-text">{totalWins}</div>
                 <div className="text-sm text-gray-400">Wins</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold gradient-text">{winRate}%</div>
-                <div className="text-sm text-gray-400">Win Rate</div>
               </div>
             </div>
 
@@ -127,33 +129,52 @@ const Profile = () => {
             <button className="btn-primary">
               ✏️ Edit Profile
             </button>
-            <button className="btn-secondary">
-              ⚙️ Settings
-            </button>
           </div>
         </div>
       </div>
 
       {/* Achievements */}
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-6">🏆 Achievements</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="card text-center">
-            <div className="text-4xl mb-3">🥇</div>
-            <h3 className="font-semibold text-white mb-2">First Victory</h3>
-            <p className="text-sm text-gray-300">Won your first blog battle</p>
-          </div>
-          <div className="card text-center">
-            <div className="text-4xl mb-3">🔥</div>
-            <h3 className="font-semibold text-white mb-2">Hot Streak</h3>
-            <p className="text-sm text-gray-300">Won 3 battles in a row</p>
-          </div>
-          <div className="card text-center">
-            <div className="text-4xl mb-3">📝</div>
-            <h3 className="font-semibold text-white mb-2">Content Creator</h3>
-            <p className="text-sm text-gray-300">Published 5+ posts</p>
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-white">🏆 Achievements</h2>
+          <div className="text-sm text-gray-400">
+            {achievements.length} unlocked • {allAchievements.length} total
           </div>
         </div>
+        
+        {authUser ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {allAchievements.slice(0, 6).map((achievement) => (
+              <Achievement key={achievement.id} achievement={achievement} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="card text-center opacity-60">
+              <div className="text-4xl mb-3 grayscale">🥇</div>
+              <h3 className="font-semibold text-gray-400 mb-2">First Victory</h3>
+              <p className="text-sm text-gray-500">Won your first blog battle</p>
+            </div>
+            <div className="card text-center opacity-60">
+              <div className="text-4xl mb-3 grayscale">🔥</div>
+              <h3 className="font-semibold text-gray-400 mb-2">Hot Streak</h3>
+              <p className="text-sm text-gray-500">Won 3 battles in a row</p>
+            </div>
+            <div className="card text-center opacity-60">
+              <div className="text-4xl mb-3 grayscale">📝</div>
+              <h3 className="font-semibold text-gray-400 mb-2">Content Creator</h3>
+              <p className="text-sm text-gray-500">Published 5+ posts</p>
+            </div>
+          </div>
+        )}
+
+        {authUser && allAchievements.length > 6 && (
+          <div className="mt-6 text-center">
+            <Link to="/achievements" className="btn-secondary">
+              View All Achievements ({allAchievements.length})
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* User's Posts */}
@@ -192,70 +213,6 @@ const Profile = () => {
         )}
       </div>
 
-      {/* Battle History */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-bold text-white mb-6">⚔️ Battle History</h2>
-        <div className="space-y-4">
-          {userPosts.slice(0, 5).map((post, index) => (
-            <div key={post._id || post.id} className="card">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center">
-                    <span className="text-white font-bold">
-                      {index + 1}
-                    </span>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-white">{post.title}</h4>
-                    <p className="text-sm text-gray-300">{post.category}</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-lg font-bold text-white">
-                    {post.wins > 0 ? '🏆 Won' : '❌ Lost'}
-                  </div>
-                  <div className="text-sm text-gray-400">
-                    {post.votes || 0} votes
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="card">
-          <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center mr-4">
-              <span className="text-2xl">📊</span>
-            </div>
-            <h3 className="text-xl font-semibold text-white">Analytics</h3>
-          </div>
-          <p className="text-gray-300 mb-4">
-            Track your post performance and engagement metrics.
-          </p>
-          <button className="btn-secondary w-full">
-            View Analytics
-          </button>
-        </div>
-
-        <div className="card">
-          <div className="flex items-center mb-4">
-            <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center mr-4">
-              <span className="text-2xl">⚔️</span>
-            </div>
-            <h3 className="text-xl font-semibold text-white">Join Battle</h3>
-          </div>
-          <p className="text-gray-300 mb-4">
-            Enter your posts into the tournament bracket.
-          </p>
-          <Link to="/battles" className="btn-primary w-full text-center block">
-            Start Battling
-          </Link>
-        </div>
-      </div>
     </div>
   );
 };

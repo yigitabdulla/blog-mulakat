@@ -23,6 +23,21 @@ const TournamentDetail = () => {
         <h1 className="text-3xl font-bold text-white">{t.name}</h1>
         <div className="text-gray-400">{t.blogs.length}/{t.size} slots • {t.status}</div>
         <div className="text-gray-400">Match duration: {t.matchDurationMinutes} min</div>
+        
+        {/* Winner Display */}
+        {t.status === 'completed' && t.winner && (
+          <div className="mt-4 p-4 bg-gradient-to-r from-yellow-600 to-yellow-500 rounded-xl border-2 border-yellow-400">
+            <div className="flex items-center space-x-3">
+              <div className="text-3xl">🏆</div>
+              <div>
+                <h2 className="text-xl font-bold text-white">Tournament Winner!</h2>
+                <p className="text-yellow-100">
+                  <span className="font-semibold">{t.winner.title}</span> by {t.winner.author?.username || 'Anonymous'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="space-y-6">

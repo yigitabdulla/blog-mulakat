@@ -111,20 +111,29 @@ const VotingScreen = () => {
         </p>
       </div>
 
-      {/* Tournaments List */}
+      {/* Active Tournaments */}
       <div className="card mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-white text-xl font-semibold">Active Tournaments</h2>
         </div>
-        {tournaments.length === 0 ? (
-          <div className="text-gray-300">No tournaments yet.</div>
+        {tournaments.filter(t => t.status === 'active' || t.status === 'draft').length === 0 ? (
+          <div className="text-gray-300">No active tournaments.</div>
         ) : (
           <div className="space-y-3">
-            {tournaments.map(t => (
+            {tournaments.filter(t => t.status === 'active' || t.status === 'draft').map(t => (
               <div key={t._id} className="flex items-center justify-between bg-gray-800 rounded-xl p-4">
                 <div>
                   <Link to={`/tournaments/${t._id}`} className="text-white font-medium hover:text-primary-400">{t.name}</Link>
-                  <div className="text-gray-400 text-sm">{t.blogs.length}/{t.size} slots • {t.status}</div>
+                  <div className="text-gray-400 text-sm">
+                    {t.blogs.length}/{t.size} slots • 
+                    <span className={`ml-1 px-2 py-1 rounded-full text-xs font-medium ${
+                      t.status === 'active' ? 'bg-green-100 text-green-800' : 
+                      t.status === 'draft' ? 'bg-yellow-100 text-yellow-800' : 
+                      'bg-gray-100 text-gray-800'
+                    }`}>
+                      {t.status}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   {user && t.status === 'draft' && t.blogs.length < t.size && (
@@ -133,6 +142,45 @@ const VotingScreen = () => {
                   {(user?.roles || []).includes('admin') && t.status === 'draft' && (
                     <button className="btn-primary" disabled={t.blogs.length !== t.size} onClick={() => dispatch(startTournament(t._id))}>Start</button>
                   )}
+                  {(user?.roles || []).includes('admin') && (
+                    <button className="btn-secondary" onClick={() => dispatch(deleteTournament(t._id))}>Delete</button>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Completed Tournaments */}
+      <div className="card mb-8">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-white text-xl font-semibold">Completed Tournaments</h2>
+        </div>
+        {tournaments.filter(t => t.status === 'completed').length === 0 ? (
+          <div className="text-gray-300">No completed tournaments yet.</div>
+        ) : (
+          <div className="space-y-3">
+            {tournaments.filter(t => t.status === 'completed').map(t => (
+              <div key={t._id} className="flex items-center justify-between bg-gray-800 rounded-xl p-4">
+                <div>
+                  <Link to={`/tournaments/${t._id}`} className="text-white font-medium hover:text-primary-400">{t.name}</Link>
+                  <div className="text-gray-400 text-sm">
+                    {t.blogs.length}/{t.size} slots • 
+                    <span className="ml-1 px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {t.status}
+                    </span>
+                  </div>
+                  {t.winner && (
+                    <div className="text-yellow-400 text-sm mt-1">
+                      🏆 Winner: {t.winner.title} by {t.winner.author?.username || 'Anonymous'}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link to={`/tournaments/${t._id}`} className="btn-secondary text-sm">
+                    View Results
+                  </Link>
                   {(user?.roles || []).includes('admin') && (
                     <button className="btn-secondary" onClick={() => dispatch(deleteTournament(t._id))}>Delete</button>
                   )}

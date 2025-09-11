@@ -198,9 +198,57 @@ const getMe = async (req, res) => {
     }
 };
 
+// @desc    Promote user to admin (for initial setup)
+// @route   POST /api/auth/promote-admin
+// @access  Public (for initial setup only)
+const promoteToAdmin = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email is required'
+            });
+        }
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            });
+        }
+
+        // Add admin role if not already present
+        if (!user.roles.includes('admin')) {
+            user.roles.push('admin');
+            await user.save();
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'User promoted to admin successfully',
+            data: {
+                _id: user._id,
+                username: user.username,
+                email: user.email,
+                roles: user.roles
+            }
+        });
+    } catch (error) {
+        console.error('Promote admin error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Server error during promotion'
+        });
+    }
+};
+
 module.exports = {
     registerUser,
     loginUser,
     logoutUser,
-    getMe
+    getMe,
+    promoteToAdmin
 };

@@ -13,6 +13,7 @@ const tournamentSchema = new mongoose.Schema(
     ],
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     status: { type: String, enum: ['draft', 'active', 'completed'], default: 'draft' },
+    winner: { type: mongoose.Schema.Types.ObjectId, ref: 'Blog' },
     matchDurationMinutes: { type: Number, default: 10 },
     matches: [
       {

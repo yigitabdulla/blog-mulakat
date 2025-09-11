@@ -1,5 +1,6 @@
 const Tournament = require('../models/tournamentModel');
 const Blog = require('../models/blogModal');
+const User = require('../models/userModel');
 
 // Helper to finalize finished matches and auto-advance rounds
 const finalizeAndAdvance = async (tournament) => {
@@ -36,8 +37,26 @@ const finalizeAndAdvance = async (tournament) => {
     if (winners.length <= 1) {
       // If only one winner remains across all rounds, complete tournament
       if (winners.length === 1) {
-        tournament.status = 'completed';
-        changed = true;
+        // Only update if tournament is not already completed
+        if (tournament.status !== 'completed') {
+          tournament.status = 'completed';
+          tournament.winner = winners[0];
+          
+          // Increment the winner's user totalWins
+          try {
+            const winningBlog = await Blog.findById(winners[0]);
+            if (winningBlog && winningBlog.author) {
+              await User.findByIdAndUpdate(
+                winningBlog.author,
+                { $inc: { totalWins: 1 } }
+              );
+            }
+          } catch (error) {
+            console.error('Error updating user totalWins:', error);
+          }
+          
+          changed = true;
+        }
       }
       continue;
     }
@@ -127,6 +146,7 @@ const getTournaments = async (req, res) => {
       .populate('blogs', 'title author')
       .populate('matches.blogA', 'title author image category content')
       .populate('matches.blogB', 'title author image category content')
+      .populate('winner', 'title author')
       .populate('createdBy', 'username email')
       .sort({ createdAt: -1 });
     res.json({ success: true, data: refreshed });
@@ -281,7 +301,26 @@ const voteMatch = async (req, res) => {
               });
             }
           } else {
-            tournament.status = 'completed';
+            // Only update if tournament is not already completed
+            if (tournament.status !== 'completed') {
+              tournament.status = 'completed';
+              // Record the winner and increment user's totalWins
+              const finalWinner = winners[0];
+              if (finalWinner) {
+                tournament.winner = finalWinner;
+                try {
+                  const winningBlog = await Blog.findById(finalWinner);
+                  if (winningBlog && winningBlog.author) {
+                    await User.findByIdAndUpdate(
+                      winningBlog.author,
+                      { $inc: { totalWins: 1 } }
+                    );
+                  }
+                } catch (error) {
+                  console.error('Error updating user totalWins:', error);
+                }
+              }
+            }
           }
         }
       }
@@ -327,7 +366,26 @@ const voteMatch = async (req, res) => {
             });
           }
         } else {
-          tournament.status = 'completed';
+          // Only update if tournament is not already completed
+          if (tournament.status !== 'completed') {
+            tournament.status = 'completed';
+            // Record the winner and increment user's totalWins
+            const finalWinner = winners[0];
+            if (finalWinner) {
+              tournament.winner = finalWinner;
+              try {
+                const winningBlog = await Blog.findById(finalWinner);
+                if (winningBlog && winningBlog.author) {
+                  await User.findByIdAndUpdate(
+                    winningBlog.author,
+                    { $inc: { totalWins: 1 } }
+                  );
+                }
+              } catch (error) {
+                console.error('Error updating user totalWins:', error);
+              }
+            }
+          }
         }
       }
     }
@@ -371,6 +429,7 @@ const getTournamentById = async (req, res) => {
       .populate('blogs', 'title author')
       .populate('matches.blogA', 'title author image category content')
       .populate('matches.blogB', 'title author image category content')
+      .populate('winner', 'title author')
       .populate('createdBy', 'username email');
     res.json({ success: true, data: refreshed });
   } catch (error) {

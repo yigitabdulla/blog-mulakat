@@ -25,6 +25,11 @@ const Layout = ({ children }) => {
     { path: '/profile', label: 'Profile', icon: '👤' },
   ];
 
+  // Add admin link if user is admin
+  if (user && user.roles?.includes('admin')) {
+    navItems.push({ path: '/admin', label: 'Admin', icon: '⚙️' });
+  }
+
   return (
     <div className="min-h-screen bg-gray-900">
       {/* Navigation */}

@@ -13,6 +13,11 @@ import PostDetail from './pages/PostDetail';
 import Blogs from './pages/Blogs';
 import CreateTournament from './pages/CreateTournament';
 import TournamentDetail from './pages/TournamentDetail';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminBlogs from './pages/AdminBlogs';
+import AdminTournaments from './pages/AdminTournaments';
+import AdminUsers from './pages/AdminUsers';
+import Achievements from './pages/Achievements';
 
 function App() {
   return (
@@ -23,7 +28,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/submit" element={<SubmitPost />} />
             <Route path="/battles" element={<VotingScreen />} />
-            <Route path="/vote" element={<VotingScreen />} />
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/results" element={<Results />} />
@@ -32,6 +36,11 @@ function App() {
             <Route path="/post/:id" element={<PostDetail />} />
             <Route path="/admin/tournaments/create" element={<CreateTournament />} />
             <Route path="/tournaments/:id" element={<TournamentDetail />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/blogs" element={<AdminBlogs />} />
+            <Route path="/admin/tournaments" element={<AdminTournaments />} />
+            <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/achievements" element={<Achievements />} />
           </Routes>
         </Layout>
       </Router>
