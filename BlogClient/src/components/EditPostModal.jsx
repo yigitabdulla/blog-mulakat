@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateBlogById } from '../store/slices/blogSlice';
+import { Pencil } from 'lucide-react';
 
 const EditPostModal = ({ isOpen, onClose, post, onUpdated }) => {
   const dispatch = useDispatch();
@@ -85,8 +86,8 @@ const EditPostModal = ({ isOpen, onClose, post, onUpdated }) => {
         <div className="inline-block align-bottom bg-gray-800 rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full border border-gray-700">
           <div className="bg-gradient-to-r from-primary-500 to-secondary-500 px-6 py-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold text-white">
-                ✏️ Update Post
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Pencil size={16} color="#ffffff" /> Update Post
               </h3>
               <button
                 onClick={handleClose}

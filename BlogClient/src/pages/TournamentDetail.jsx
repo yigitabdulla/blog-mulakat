@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { fetchTournamentById } from '../store/slices/tournamentSlice';
 import { voteMatch } from '../store/slices/tournamentSlice';
 import BlogCard from '../components/BlogCard';
+import MobileVotingCard from '../components/MobileVotingCard';
 
 const TournamentDetail = () => {
   const { id } = useParams();
@@ -65,6 +66,7 @@ const MatchRow = ({ tId, idx, match }) => {
   const canVote = live && !!user;
 
   const onVote = (pick) => {
+    if (!canVote) return;
     dispatch(voteMatch({ id: tId, index: idx, pick }));
   };
 
@@ -83,18 +85,53 @@ const MatchRow = ({ tId, idx, match }) => {
     };
   };
 
+  // Mobile swipe state: 0 => A, 1 => B
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const postA = mapBlogForCard(match.blogA, match.startsAt);
+  const postB = mapBlogForCard(match.blogB, match.startsAt);
+
   return (
     <div className="bg-gray-800 rounded-xl p-4">
       <div className="flex items-center justify-between mb-4">
         <div className="text-gray-300 text-sm">{statusText}</div>
         <div className="flex items-center gap-2">
+          <button className="btn-secondary hidden md:inline-flex" disabled={!canVote} onClick={() => onVote('A')}>Vote A ({match.votesA})</button>
+          <button className="btn-primary hidden md:inline-flex" disabled={!canVote} onClick={() => onVote('B')}>Vote B ({match.votesB})</button>
+        </div>
+      </div>
+
+      {/* Mobile swipe view */}
+      <div className="md:hidden">
+        <MobileVotingCard
+          post={currentIndex === 0 ? postA : postB}
+          isVoted={false}
+          onVote={() => onVote(currentIndex === 0 ? 'A' : 'B')}
+          onSwipeLeft={() => setCurrentIndex(1)}
+          onSwipeRight={() => setCurrentIndex(0)}
+        />
+        <div className="mt-3 flex items-center justify-center gap-2">
+          <button
+            className={`h-2 w-2 rounded-full ${currentIndex === 0 ? 'bg-primary-400' : 'bg-gray-600'}`}
+            onClick={() => setCurrentIndex(0)}
+            aria-label="Show first blog"
+          />
+          <button
+            className={`h-2 w-2 rounded-full ${currentIndex === 1 ? 'bg-primary-400' : 'bg-gray-600'}`}
+            onClick={() => setCurrentIndex(1)}
+            aria-label="Show second blog"
+          />
+        </div>
+        <div className="mt-4 grid grid-cols-2 gap-3">
           <button className="btn-secondary" disabled={!canVote} onClick={() => onVote('A')}>Vote A ({match.votesA})</button>
           <button className="btn-primary" disabled={!canVote} onClick={() => onVote('B')}>Vote B ({match.votesB})</button>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <BlogCard post={mapBlogForCard(match.blogA, match.startsAt)} />
-        <BlogCard post={mapBlogForCard(match.blogB, match.startsAt)} />
+
+      {/* Desktop two-column view */}
+      <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-4">
+        <BlogCard post={postA} />
+        <BlogCard post={postB} />
       </div>
     </div>
   );

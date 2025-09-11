@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import BlogCard from '../components/BlogCard';
 import { fetchBlogs } from '../store/slices/blogSlice';
+import { Rocket, Swords, Trophy, Flame, Book} from 'lucide-react';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -29,11 +30,11 @@ const Home = () => {
           Where the best blog posts compete in epic battles. Submit your content, vote for favorites, and watch the champions rise!
         </p>
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <Link to="/submit" className="btn-primary text-lg px-8 py-4">
-            🚀 Submit Your Post
+          <Link to="/submit" className="flex justify-center items-center gap-2 btn-primary text-lg px-8 py-4 min-w-60">
+            <Rocket size={24} color="#d1d1d1" /> Submit Your Post
           </Link>
-          <Link to="/battles" className="btn-accent text-lg px-8 py-4">
-            ⚔️ Join Battle
+          <Link to="/battles" className="flex justify-center items-center gap-2 btn-accent text-lg px-8 py-4 min-w-60">
+            <Swords size={24} color="#d1d1d1" /> Join Battle
           </Link>
         </div>
       </div>
@@ -83,7 +84,7 @@ const Home = () => {
       {inBattlePosts.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-8">
-            <h2 className="text-3xl font-bold text-white">🔥 Active Battles</h2>
+            <h2 className="text-3xl font-bold text-white"><Flame size={16} color="#d1d1d1" /> Active Battles</h2>
             <Link to="/battles" className="text-primary-400 hover:text-primary-300 font-medium">
               Join Battle →
             </Link>
@@ -93,7 +94,7 @@ const Home = () => {
             {inBattlePosts.slice(0, 4).map((post) => (
               <div key={post.id} className="card-battle">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="badge badge-warning">⚔️ In Battle</span>
+                  <span className="badge badge-warning"><Swords size={16} color="#d1d1d1" /> In Battle</span>
                   <span className="text-sm text-gray-400">2h left</span>
                 </div>
                 <BlogCard post={post} showBattleStatus={true} />
@@ -115,7 +116,7 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="text-center">
             <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-2xl">📝</span>
+              <span className="text-2xl"><Book size={24} color="#d1d1d1" /></span>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">1. Submit</h3>
             <p className="text-gray-300">
@@ -125,7 +126,7 @@ const Home = () => {
 
           <div className="text-center">
             <div className="w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-2xl">⚔️</span>
+              <span className="text-2xl"><Swords size={24} color="#d1d1d1" /></span>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">2. Battle</h3>
             <p className="text-gray-300">
@@ -135,7 +136,7 @@ const Home = () => {
 
           <div className="text-center">
             <div className="w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <span className="text-2xl">🏆</span>
+              <span className="text-2xl"><Trophy size={24} color="#d1d1d1" /></span>
             </div>
             <h3 className="text-xl font-semibold text-white mb-2">3. Win</h3>
             <p className="text-gray-300">

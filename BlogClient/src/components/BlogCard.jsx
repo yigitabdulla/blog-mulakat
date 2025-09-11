@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom';
-
+import { Swords, Trophy, Book } from 'lucide-react';
 const BlogCard = ({ post, showBattleStatus = false }) => {
   const getStatusBadge = (post) => {
     if (post.inBattle) {
-      return <span className="badge badge-warning">⚔️ In Battle</span>;
+      return <span className="badge badge-warning flex items-center gap-2"><Swords size={16} color="#d1d1d1" /> In Battle</span>;
     }
     if (post.wins > 0) {
-      return <span className="badge badge-success">🏆 Winner</span>;
+      return <span className="badge badge-success flex items-center gap-2"><Trophy size={16} color="#d1d1d1" /> Winner</span>;
     }
-    return <span className="badge badge-primary">📝 Published</span>;
+    return <span className="badge badge-primary flex items-center gap-2"><Book size={16} color="#d1d1d1" /> Published</span>;
   };
 
   const getCategoryColor = (category) => {
@@ -32,22 +32,26 @@ const BlogCard = ({ post, showBattleStatus = false }) => {
 
   return (
     <div className="card group hover:shadow-xl transition-all duration-300">
-      {/* Image */}
-      {post.image && (
-        <div className="relative mb-4 overflow-hidden rounded-xl">
+      {/* Media (always reserve height) */}
+      <div className="relative mb-4 overflow-hidden rounded-xl h-48 w-full bg-gray-800 flex items-center justify-center">
+        {post.image ? (
           <img
             src={post.image}
             alt={post.title}
             loading="lazy"
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
-          {showBattleStatus && (
-            <div className="absolute top-3 right-3">
-              {getStatusBadge(post)}
-            </div>
-          )}
-        </div>
-      )}
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
+            No image
+          </div>
+        )}
+        {showBattleStatus && (
+          <div className="absolute top-3 right-3">
+            {getStatusBadge(post)}
+          </div>
+        )}
+      </div>
 
       {/* Content */}
       <div className="space-y-3">

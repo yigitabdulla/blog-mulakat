@@ -73,7 +73,7 @@ const PostDetail = () => {
         )}
       </div>
       {post.image && (
-        <img src={post.image} alt={post.title} className="w-full h-80 object-cover rounded-xl mb-6" />
+        <img src={post.image} alt={post.title} className="w-full h-80 object-contain rounded-xl mb-6" />
       )}
       {post.category && (
         <div className="mb-4">

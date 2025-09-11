@@ -5,6 +5,7 @@ import Achievement from '../components/Achievement';
 import { deleteBlogById, fetchMyBlogs } from '../store/slices/blogSlice';
 import { calculateAchievements, getLockedAchievements } from '../utils/achievements';
 import { useEffect } from 'react';
+import { Pencil, Plus } from 'lucide-react';
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -126,8 +127,8 @@ const Profile = () => {
 
           {/* Edit Profile Button */}
           <div className="flex flex-col space-y-3">
-            <button className="btn-primary">
-              ✏️ Edit Profile
+            <button className="btn-primary flex items-center gap-2">
+              <Pencil size={16} color="#ffffff" /> Edit Profile 
             </button>
           </div>
         </div>
@@ -181,8 +182,8 @@ const Profile = () => {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold text-white">My Posts</h2>
-          <Link to="/submit" className="btn-primary">
-            📝 Create New Post
+          <Link to="/submit" className="btn-primary flex items-center gap-2">
+            <Plus size={20} color="#ffffff" /> Create New Post
           </Link>
         </div>
 

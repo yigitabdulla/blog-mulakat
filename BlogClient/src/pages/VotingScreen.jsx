@@ -8,7 +8,7 @@ import VotingCard from '../components/VotingCard';
 import MobileVotingCard from '../components/MobileVotingCard';
 import ResultAnimation from '../components/ResultAnimation';
 import BlogCard from '../components/BlogCard';
-
+import { Trophy } from 'lucide-react';
 const VotingScreen = () => {
   const dispatch = useDispatch();
   const { posts, currentComparison } = useSelector(state => state.blog);
@@ -172,8 +172,8 @@ const VotingScreen = () => {
                     </span>
                   </div>
                   {t.winner && (
-                    <div className="text-yellow-400 text-sm mt-1">
-                      🏆 Winner: {t.winner.title} by {t.winner.author?.username || 'Anonymous'}
+                    <div className="text-yellow-400 text-sm mt-1 flex items-center gap-2">
+                      <Trophy size={16} color="#ffcc14" /> Winner: {t.winner.title} by {t.winner.author?.username || 'Anonymous'}
                     </div>
                   )}
                 </div>

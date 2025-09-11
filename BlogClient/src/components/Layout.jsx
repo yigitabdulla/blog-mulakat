@@ -2,6 +2,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getMe, logout } from '../store/slices/authSlice';
+import { House, Swords, Book, User, Settings } from 'lucide-react';
 
 const Layout = ({ children }) => {
   const location = useLocation();
@@ -19,18 +20,18 @@ const Layout = ({ children }) => {
   };
 
   const navItems = [
-    { path: '/', label: 'Home', icon: '🏠' },
-    { path: '/battles', label: 'Battles', icon: '⚔️' },
-    { path: '/blogs', label: 'Blogs', icon: '📂' },
+    { path: '/', label: 'Home', icon: <House size={16} color="#d1d1d1" /> },
+    { path: '/battles', label: 'Battles', icon: <Swords size={16} color="#d1d1d1" /> },
+    { path: '/blogs', label: 'Blogs', icon: <Book size={16} color="#d1d1d1" /> },
   ];
 
   if (user) {
-    navItems.push({ path: '/profile', label: 'Profile', icon: '👤' });
+    navItems.push({ path: '/profile', label: 'Profile', icon: <User size={16} color="#d1d1d1" /> });
   }
 
   // Add admin link if user is admin
   if (user && user.roles?.includes('admin')) {
-    navItems.push({ path: '/admin', label: 'Admin', icon: '⚙️' });
+    navItems.push({ path: '/admin', label: 'Admin', icon: <Settings size={16} color="#d1d1d1" /> });
   }
 
   return (
