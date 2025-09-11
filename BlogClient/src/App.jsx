@@ -27,7 +27,7 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/submit" element={<SubmitPost />} />
+            <Route path="/submit" element={<RequireAuth><SubmitPost /></RequireAuth>} />
             <Route path="/battles" element={<VotingScreen />} />
             <Route path="/blogs" element={<Blogs />} />
             <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />

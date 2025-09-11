@@ -156,7 +156,7 @@ const Home = () => {
           <Link to="/submit" className="btn-primary text-lg px-8 py-4">
             Submit Your First Post
           </Link>
-          <Link to="/bracket" className="btn-secondary text-lg px-8 py-4">
+          <Link to="/battles" className="btn-secondary text-lg px-8 py-4">
             View Tournament Bracket
           </Link>
         </div>
