@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import SubmitModal from '../components/SubmitModal';
-
+import { Plus, Book, Swords, Laptop, Star, Plane, Pizza, Heart, Briefcase, BookOpen, Film, File, Volleyball } from 'lucide-react';
 const SubmitPost = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -16,12 +16,12 @@ const SubmitPost = () => {
       </div>
 
       {/* Quick Submit Button */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-12 flex justify-center">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="btn-primary text-xl px-12 py-4"
+          className="btn-primary text-xl px-12 py-4 flex items-center gap-2"
         >
-          🚀 Create New Post
+          <Plus size={24} color="#d1d1d1" /> Create New Post
         </button>
       </div>
 
@@ -30,7 +30,7 @@ const SubmitPost = () => {
         <div className="card">
           <div className="flex items-center mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center mr-4">
-              <span className="text-2xl">📝</span>
+              <span className="text-2xl"><Book size={24} color="#d1d1d1" /></span>
             </div>
                   <h3 className="text-xl font-semibold text-white">Writing Guidelines</h3>
                 </div>
@@ -46,7 +46,7 @@ const SubmitPost = () => {
         <div className="card">
           <div className="flex items-center mb-4">
             <div className="w-12 h-12 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center mr-4">
-              <span className="text-2xl">⚔️</span>
+              <span className="text-2xl"><Swords size={24} color="#d1d1d1" /></span> 
             </div>
                   <h3 className="text-xl font-semibold text-white">Battle Rules</h3>
                 </div>
@@ -66,17 +66,17 @@ const SubmitPost = () => {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {['Technology', 'Lifestyle', 'Travel', 'Food', 'Health', 'Business', 'Education', 'Entertainment', 'Sports', 'Other'].map((category) => (
             <div key={category} className="card text-center hover:shadow-lg transition-all duration-300 cursor-pointer">
-              <div className="text-2xl mb-2">
-                {category === 'Technology' && '💻'}
-                {category === 'Lifestyle' && '🌟'}
-                {category === 'Travel' && '✈️'}
-                {category === 'Food' && '🍕'}
-                {category === 'Health' && '💪'}
-                {category === 'Business' && '💼'}
-                {category === 'Education' && '📚'}
-                {category === 'Entertainment' && '🎬'}
-                {category === 'Sports' && '⚽'}
-                {category === 'Other' && '📄'}
+              <div className="text-2xl mb-2 flex justify-center items-center">
+                {category === 'Technology' && <Laptop size={24} color="#d1d1d1" />}
+                {category === 'Lifestyle' && <Star size={24} color="#d1d1d1" />}
+                {category === 'Travel' && <Plane size={24} color="#d1d1d1" />}
+                {category === 'Food' && <Pizza size={24} color="#d1d1d1" />}
+                {category === 'Health' && <Heart size={24} color="#d1d1d1" />}
+                {category === 'Business' && <Briefcase size={24} color="#d1d1d1" />}
+                {category === 'Education' && <BookOpen size={24} color="#d1d1d1" />}
+                {category === 'Entertainment' && <Film size={24} color="#d1d1d1" />}
+                {category === 'Sports' && <Volleyball size={24} color="#d1d1d1" />}
+                {category === 'Other' && <File size={24} color="#d1d1d1" />}
               </div>
               <div className="text-sm font-medium text-gray-300">{category}</div>
             </div>
