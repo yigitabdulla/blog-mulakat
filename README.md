@@ -2,6 +2,14 @@
 
 A full-stack blogging platform with tournaments. Backend is an Express + MongoDB API; frontend is a React + Vite app styled with Tailwind.
 
+# Workflow 
+
+1 - The admin creates a tournament.
+2 - Users register for the tournament.
+3 - When the number of users is full, the admin starts the tournament.
+4 - Blogs are randomly paired.
+5 - Users vote on the blogs, and the winner advances to the next round.
+
 ## Project Structure
 
 ```
