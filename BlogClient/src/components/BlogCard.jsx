@@ -27,6 +27,9 @@ const BlogCard = ({ post, showBattleStatus = false }) => {
     return colors[category] || 'badge-primary';
   };
 
+  const authorName = typeof post.author === 'object' ? (post.author?.username || '') : (post.author || '');
+  const initial = (authorName || post.title || 'A').charAt(0);
+
   return (
     <div className="card group hover:shadow-xl transition-all duration-300">
       {/* Image */}
@@ -73,14 +76,10 @@ const BlogCard = ({ post, showBattleStatus = false }) => {
           <div className="flex items-center space-x-2">
             <div className="w-6 h-6 bg-gradient-to-br from-primary-400 to-secondary-400 rounded-full flex items-center justify-center">
               <span className="text-xs text-white font-medium">
-                {(
-                  typeof post.author === 'string'
-                    ? post.author
-                    : post.author?.username || 'A'
-                 )?.charAt(0) || 'A'}
+                {initial}
               </span>
             </div>
-            <span>{typeof post.author === 'string' ? post.author : (post.author?.username || 'Anonymous')}</span>
+            <span>{authorName || 'Unknown'}</span>
           </div>
           <span>{new Date(post.createdAt).toLocaleDateString()}</span>
         </div>
@@ -103,7 +102,7 @@ const BlogCard = ({ post, showBattleStatus = false }) => {
           </div>
           
           <Link
-            to={`/post/${post.id}`}
+            to={`/post/${post._id || post.id}`}
             className="text-primary-400 hover:text-primary-300 font-medium text-sm flex items-center"
           >
             Read More

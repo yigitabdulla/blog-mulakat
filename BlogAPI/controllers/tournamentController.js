@@ -120,7 +120,9 @@ const createTournament = async (req, res) => {
       matchDurationMinutes: matchDurationMinutes || 10,
     });
 
-    const populated = await tournament.populate('blogs', 'title author');
+    const populated = await tournament
+      .populate('blogs', 'title author')
+      .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } });
 
     res.status(201).json({ success: true, data: populated });
   } catch (error) {
@@ -135,6 +137,7 @@ const getTournaments = async (req, res) => {
   try {
     const tournaments = await Tournament.find()
       .populate('blogs', 'title author')
+      .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } })
       .populate('createdBy', 'username email')
       .sort({ createdAt: -1 });
 
@@ -144,9 +147,10 @@ const getTournaments = async (req, res) => {
     }
     const refreshed = await Tournament.find()
       .populate('blogs', 'title author')
-      .populate('matches.blogA', 'title author image category content')
-      .populate('matches.blogB', 'title author image category content')
-      .populate('winner', 'title author')
+      .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'matches.blogA', select: 'title author image category content', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'matches.blogB', select: 'title author image category content', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'winner', select: 'title author', populate: { path: 'author', select: 'username email' } })
       .populate('createdBy', 'username email')
       .sort({ createdAt: -1 });
     res.json({ success: true, data: refreshed });
@@ -198,6 +202,7 @@ const registerToTournament = async (req, res) => {
 
     const populated = await Tournament.findById(id)
       .populate('blogs', 'title author')
+      .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } })
       .populate('createdBy', 'username email');
 
     res.json({ success: true, data: populated });
@@ -246,8 +251,9 @@ const startTournament = async (req, res) => {
 
     const populated = await Tournament.findById(id)
       .populate('blogs', 'title author')
-      .populate('matches.blogA', 'title author')
-      .populate('matches.blogB', 'title author');
+      .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'matches.blogA', select: 'title author', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'matches.blogB', select: 'title author', populate: { path: 'author', select: 'username email' } });
 
     res.json({ success: true, data: populated });
   } catch (error) {
@@ -420,16 +426,18 @@ const getTournamentById = async (req, res) => {
   try {
     const t = await Tournament.findById(req.params.id)
       .populate('blogs', 'title author')
-      .populate('matches.blogA', 'title author')
-      .populate('matches.blogB', 'title author')
+      .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'matches.blogA', select: 'title author', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'matches.blogB', select: 'title author', populate: { path: 'author', select: 'username email' } })
       .populate('createdBy', 'username email');
     if (!t) return res.status(404).json({ success: false, message: 'Tournament not found' });
     await finalizeAndAdvance(t);
     const refreshed = await Tournament.findById(req.params.id)
       .populate('blogs', 'title author')
-      .populate('matches.blogA', 'title author image category content')
-      .populate('matches.blogB', 'title author image category content')
-      .populate('winner', 'title author')
+      .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'matches.blogA', select: 'title author image category content', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'matches.blogB', select: 'title author image category content', populate: { path: 'author', select: 'username email' } })
+      .populate({ path: 'winner', select: 'title author', populate: { path: 'author', select: 'username email' } })
       .populate('createdBy', 'username email');
     res.json({ success: true, data: refreshed });
   } catch (error) {

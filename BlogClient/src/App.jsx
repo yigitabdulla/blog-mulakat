@@ -18,6 +18,7 @@ import AdminBlogs from './pages/AdminBlogs';
 import AdminTournaments from './pages/AdminTournaments';
 import AdminUsers from './pages/AdminUsers';
 import Achievements from './pages/Achievements';
+import RequireAuth from './components/RequireAuth';
 
 function App() {
   return (
@@ -29,7 +30,7 @@ function App() {
             <Route path="/submit" element={<SubmitPost />} />
             <Route path="/battles" element={<VotingScreen />} />
             <Route path="/blogs" element={<Blogs />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
             <Route path="/results" element={<Results />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

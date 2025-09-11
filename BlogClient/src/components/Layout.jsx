@@ -22,8 +22,11 @@ const Layout = ({ children }) => {
     { path: '/', label: 'Home', icon: '🏠' },
     { path: '/battles', label: 'Battles', icon: '⚔️' },
     { path: '/blogs', label: 'Blogs', icon: '📂' },
-    { path: '/profile', label: 'Profile', icon: '👤' },
   ];
+
+  if (user) {
+    navItems.push({ path: '/profile', label: 'Profile', icon: '👤' });
+  }
 
   // Add admin link if user is admin
   if (user && user.roles?.includes('admin')) {

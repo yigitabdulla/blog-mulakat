@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import api from '../api/client';
 import { deleteBlogById } from '../store/slices/blogSlice';
+import EditPostModal from '../components/EditPostModal';
 
 const PostDetail = () => {
   const { id } = useParams();
@@ -12,6 +13,7 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -49,17 +51,25 @@ const PostDetail = () => {
       <div className="flex items-start justify-between mt-4 mb-4">
         <h1 className="text-3xl font-bold text-white">{post.title}</h1>
         {isOwner && (
-          <button
-            className="btn-secondary text-sm"
-            onClick={() => {
-              if (confirm('Delete this post?')) {
-                dispatch(deleteBlogById(id));
-                navigate('/blogs');
-              }
-            }}
-          >
-            Delete
-          </button>
+          <div className="flex items-center space-x-2">
+            <button
+              className="btn-secondary text-sm"
+              onClick={() => setIsEditOpen(true)}
+            >
+              Update
+            </button>
+            <button
+              className="btn-secondary text-sm"
+              onClick={() => {
+                if (confirm('Delete this post?')) {
+                  dispatch(deleteBlogById(id));
+                  navigate('/blogs');
+                }
+              }}
+            >
+              Delete
+            </button>
+          </div>
         )}
       </div>
       {post.image && (
@@ -76,6 +86,13 @@ const PostDetail = () => {
       <div className="card">
         <p className="text-gray-200 whitespace-pre-wrap">{post.content}</p>
       </div>
+
+      <EditPostModal
+        isOpen={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        post={post}
+        onUpdated={(updated) => setPost(updated)}
+      />
     </div>
   );
 };

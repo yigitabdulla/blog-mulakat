@@ -32,7 +32,7 @@ const TournamentDetail = () => {
               <div>
                 <h2 className="text-xl font-bold text-white">Tournament Winner!</h2>
                 <p className="text-yellow-100">
-                  <span className="font-semibold">{t.winner.title}</span> by {t.winner.author?.username || 'Anonymous'}
+                  <span className="font-semibold">{t.winner.title}</span> by {t.winner.author?.username || t.winner.author}
                 </p>
               </div>
             </div>
@@ -68,6 +68,21 @@ const MatchRow = ({ tId, idx, match }) => {
     dispatch(voteMatch({ id: tId, index: idx, pick }));
   };
 
+  const mapBlogForCard = (b, createdAt) => {
+    const author = b?.author && typeof b.author === 'object' ? b.author.username : b?.author;
+    return {
+      id: b?._id || b,
+      _id: b?._id || b,
+      title: b?.title || 'TBD',
+      image: b?.image,
+      category: b?.category,
+      content: b?.content,
+      description: b?.content ? b.content.slice(0, 150) + '...' : '',
+      author: author || 'Unknown',
+      createdAt
+    };
+  };
+
   return (
     <div className="bg-gray-800 rounded-xl p-4">
       <div className="flex items-center justify-between mb-4">
@@ -78,28 +93,8 @@ const MatchRow = ({ tId, idx, match }) => {
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <BlogCard post={{
-          id: match.blogA?._id || match.blogA,
-          _id: match.blogA?._id || match.blogA,
-          title: match.blogA?.title || 'TBD',
-          image: match.blogA?.image,
-          category: match.blogA?.category,
-          content: match.blogA?.content,
-          description: match.blogA?.content ? match.blogA.content.slice(0, 150) + '...' : '',
-          author: match.blogA?.author?.username || 'Anonymous',
-          createdAt: match.startsAt
-        }} />
-        <BlogCard post={{
-          id: match.blogB?._id || match.blogB,
-          _id: match.blogB?._id || match.blogB,
-          title: match.blogB?.title || 'TBD',
-          image: match.blogB?.image,
-          category: match.blogB?.category,
-          content: match.blogB?.content,
-          description: match.blogB?.content ? match.blogB.content.slice(0, 150) + '...' : '',
-          author: match.blogB?.author?.username || 'Anonymous',
-          createdAt: match.startsAt
-        }} />
+        <BlogCard post={mapBlogForCard(match.blogA, match.startsAt)} />
+        <BlogCard post={mapBlogForCard(match.blogB, match.startsAt)} />
       </div>
     </div>
   );

@@ -191,27 +191,6 @@ const VotingScreen = () => {
         )}
       </div>
 
-      {/* Battle Info */}
-      {canShowComparison && (
-        <div className="bg-gradient-to-r from-gray-800 to-gray-700 rounded-2xl p-6 mb-8 border border-gray-600">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-xl flex items-center justify-center">
-                <span className="text-2xl">⚔️</span>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-white">Round of 16</h3>
-                <p className="text-sm text-gray-300">Battle #3 of 8</p>
-              </div>
-            </div>
-            <div className="text-right">
-              <div className="text-2xl font-bold gradient-text">2h 15m</div>
-              <div className="text-sm text-gray-300">Time remaining</div>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* VS Divider */}
       <div className="relative mb-8">
         <div className="absolute inset-0 flex items-center" aria-hidden="true">
@@ -224,82 +203,6 @@ const VotingScreen = () => {
         </div>
       </div>
 
-      {/* Voting Cards */}
-      {canShowComparison && (
-      <div className="mb-8">
-        {/* Desktop Layout */}
-        <div className="hidden lg:grid grid-cols-2 gap-12">
-          <div className="relative">
-            <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-              1
-            </div>
-            <VotingCard
-              post={currentComparison.post1}
-              onVote={() => handleVote(currentComparison.post1.id, true)}
-              isVoted={votedPost === currentComparison.post1.id}
-            />
-          </div>
-          <div className="relative">
-            <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center text-white font-bold text-sm">
-              2
-            </div>
-            <VotingCard
-              post={currentComparison.post2}
-              onVote={() => handleVote(currentComparison.post2.id, true)}
-              isVoted={votedPost === currentComparison.post2.id}
-            />
-          </div>
-        </div>
-
-        {/* Mobile Layout */}
-        <div className="lg:hidden space-y-8">
-          <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-primary-100 text-primary-800 rounded-full text-sm font-medium mb-4">
-              <span className="w-6 h-6 bg-primary-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-2">1</span>
-              Post 1
-            </div>
-            <MobileVotingCard
-              post={currentComparison.post1}
-              onVote={() => handleVote(currentComparison.post1.id, true)}
-              isVoted={votedPost === currentComparison.post1.id}
-              onSwipeLeft={() => handleVote(currentComparison.post2.id, true)}
-              onSwipeRight={() => handleVote(currentComparison.post1.id, true)}
-            />
-          </div>
-          
-          <div className="text-center">
-            <div className="text-3xl font-bold gradient-text mb-4">⚔️</div>
-          </div>
-          
-          <div className="text-center">
-            <div className="inline-flex items-center px-4 py-2 bg-secondary-100 text-secondary-800 rounded-full text-sm font-medium mb-4">
-              <span className="w-6 h-6 bg-secondary-500 rounded-full flex items-center justify-center text-white text-xs font-bold mr-2">2</span>
-              Post 2
-            </div>
-            <MobileVotingCard
-              post={currentComparison.post2}
-              onVote={() => handleVote(currentComparison.post2.id, true)}
-              isVoted={votedPost === currentComparison.post2.id}
-              onSwipeLeft={() => handleVote(currentComparison.post1.id, true)}
-              onSwipeRight={() => handleVote(currentComparison.post2.id, true)}
-            />
-          </div>
-        </div>
-      </div>
-      )}
-
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <button
-          onClick={handleNextVote}
-          className="btn-secondary"
-        >
-          ⏭️ Skip Battle
-        </button>
-        <button className="btn-accent">
-          📊 View Stats
-        </button>
-      </div>
 
       {/* Blog Cards Grid */}
       <div className="mt-12">

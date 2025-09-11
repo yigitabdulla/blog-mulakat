@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/slices/authSlice';
+import { clearAuthError } from '../store/slices/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
@@ -8,6 +9,10 @@ const Login = () => {
   const navigate = useNavigate();
   const { isLoading, error, user } = useSelector(state => state.auth);
   const [form, setForm] = useState({ email: '', password: '' });
+
+  useEffect(() => {
+    dispatch(clearAuthError());
+  }, [dispatch]);
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 

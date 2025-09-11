@@ -46,7 +46,9 @@ const initialState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    clearAuthError: (state) => { state.error = null; }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(register.pending, (state) => { state.isLoading = true; state.error = null; })
@@ -55,14 +57,15 @@ const authSlice = createSlice({
       .addCase(login.pending, (state) => { state.isLoading = true; state.error = null; })
       .addCase(login.fulfilled, (state, action) => { state.isLoading = false; state.user = action.payload; })
       .addCase(login.rejected, (state, action) => { state.isLoading = false; state.error = action.payload; })
-      .addCase(getMe.pending, (state) => { state.isLoading = true; state.error = null; })
+      .addCase(getMe.pending, (state) => { state.isLoading = true; /* don't touch error here */ })
       .addCase(getMe.fulfilled, (state, action) => { state.isLoading = false; state.user = action.payload; })
-      .addCase(getMe.rejected, (state, action) => { state.isLoading = false; state.error = action.payload; state.user = null; })
+      .addCase(getMe.rejected, (state) => { state.isLoading = false; state.user = null; /* intentionally do not set global error */ })
       .addCase(logout.fulfilled, (state) => { state.user = null; })
       .addCase(logout.rejected, (state, action) => { state.error = action.payload; });
   }
 });
 
+export const { clearAuthError } = authSlice.actions;
 export default authSlice.reducer;
 
 
