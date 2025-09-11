@@ -54,7 +54,7 @@ const registerUser = async (req, res) => {
             res.cookie('token', token, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
-                sameSite: 'strict',
+                sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
                 maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
             });
 
@@ -125,7 +125,7 @@ const loginUser = async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
         });
 
@@ -156,6 +156,8 @@ const logoutUser = async (req, res) => {
     try {
         res.cookie('token', '', {
             httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             expires: new Date(0)
         });
 
@@ -220,7 +222,6 @@ const promoteToAdmin = async (req, res) => {
             });
         }
 
-        // Add admin role if not already present
         if (!user.roles.includes('admin')) {
             user.roles.push('admin');
             await user.save();

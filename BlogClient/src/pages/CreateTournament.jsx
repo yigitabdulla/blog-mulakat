@@ -39,7 +39,7 @@ const CreateTournament = () => {
     if (selected.length > size) return setError('Selected blogs exceed bracket size');
     const res = await dispatch(createTournament({ name, size, blogs: selected, matchDurationMinutes: duration }));
     if (res.meta.requestStatus === 'fulfilled') {
-      navigate('/bracket');
+      navigate('/battles');
     } else if (typeof res.payload === 'string') {
       setError(res.payload);
     }

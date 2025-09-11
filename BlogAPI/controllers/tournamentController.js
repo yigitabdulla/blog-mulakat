@@ -120,11 +120,18 @@ const createTournament = async (req, res) => {
       matchDurationMinutes: matchDurationMinutes || 10,
     });
 
-    const populated = await tournament
-      .populate('blogs', 'title author')
-      .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } });
+    let responseDoc = tournament;
+    try {
+      // Safer re-fetch and populate to avoid chained populate issues on fresh docs
+      responseDoc = await Tournament.findById(tournament._id)
+        .populate('blogs', 'title author')
+        .populate({ path: 'blogs', populate: { path: 'author', select: 'username email' } })
+        .populate('createdBy', 'username email');
+    } catch (populateError) {
+      console.error('Create tournament populate error:', populateError);
+    }
 
-    res.status(201).json({ success: true, data: populated });
+    res.status(201).json({ success: true, data: responseDoc });
   } catch (error) {
     console.error('Create tournament error:', error);
     res.status(500).json({ success: false, message: 'Server error creating tournament' });
@@ -331,7 +338,16 @@ const voteMatch = async (req, res) => {
         }
       }
       await tournament.save();
-      return res.json({ success: true, data: match });
+      try {
+        const populated = await Tournament.findById(id)
+          .populate({ path: 'matches.blogA', select: 'title author image category content', populate: { path: 'author', select: 'username email' } })
+          .populate({ path: 'matches.blogB', select: 'title author image category content', populate: { path: 'author', select: 'username email' } });
+        const populatedMatch = populated?.matches?.[Number(index)] || match;
+        return res.json({ success: true, data: populatedMatch });
+      } catch (popErr) {
+        console.error('Vote populate (ended) error:', popErr);
+        return res.json({ success: true, data: match });
+      }
     }
 
     if (match.voters.find(v => v.toString() === req.user._id.toString())) {
@@ -398,7 +414,16 @@ const voteMatch = async (req, res) => {
 
     await tournament.save();
 
-    res.json({ success: true, data: match });
+    try {
+      const populated = await Tournament.findById(id)
+        .populate({ path: 'matches.blogA', select: 'title author image category content', populate: { path: 'author', select: 'username email' } })
+        .populate({ path: 'matches.blogB', select: 'title author image category content', populate: { path: 'author', select: 'username email' } });
+      const populatedMatch = populated?.matches?.[Number(index)] || match;
+      return res.json({ success: true, data: populatedMatch });
+    } catch (popErr) {
+      console.error('Vote populate error:', popErr);
+      return res.json({ success: true, data: match });
+    }
   } catch (error) {
     console.error('Vote match error:', error);
     res.status(500).json({ success: false, message: 'Server error' });

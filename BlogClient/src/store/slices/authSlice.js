@@ -39,7 +39,7 @@ export const getMe = createAsyncThunk('auth/getMe', async (_, thunkAPI) => {
 
 const initialState = {
   user: null,
-  isLoading: false,
+  isLoading: true,
   error: null,
 };
 

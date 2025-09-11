@@ -47,7 +47,7 @@ const PostDetail = () => {
 
   return (
     <div className="max-w-3xl mx-auto">
-      <Link to="/" className="text-primary-400 hover:text-primary-300">← Back</Link>
+      <Link to="/blogs" className="text-primary-400 hover:text-primary-300">← Back</Link>
       <div className="flex items-start justify-between mt-4 mb-4">
         <h1 className="text-3xl font-bold text-white">{post.title}</h1>
         {isOwner && (
