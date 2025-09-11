@@ -101,6 +101,36 @@ const MatchRow = ({ tId, idx, match }) => {
         </div>
       </div>
 
+      {/* Vote Progress */}
+      {(() => {
+        const votesA = match.votesA || 0;
+        const votesB = match.votesB || 0;
+        const total = votesA + votesB;
+        const pctA = total ? Math.round((votesA / total) * 100) : 0;
+        const pctB = total ? 100 - pctA : 0;
+        return (
+          <div className="mb-4">
+            <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+              <span>A: {votesA} {total ? `(${pctA}%)` : ''}</span>
+              <span>Total: {total}</span>
+              <span>B: {votesB} {total ? `(${pctB}%)` : ''}</span>
+            </div>
+            <div className="h-3 w-full bg-gray-700 rounded-full overflow-hidden">
+              <div className="h-full flex">
+                <div
+                  className="bg-primary-500 h-full"
+                  style={{ width: `${pctA}%` }}
+                />
+                <div
+                  className="bg-indigo-400 h-full"
+                  style={{ width: `${pctB}%` }}
+                />
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Mobile swipe view */}
       <div className="md:hidden">
         <MobileVotingCard
